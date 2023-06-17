@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knihovna</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $(".add-book").submit(function(e){
+        e.preventDefault();
+        var title = $(this).find("input[name='title']").val();
+        var author = $(this).find("input[name='author']").val();
+        $.ajax({
+          url: "{{ url_for('add_book') }}",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ 'title': title, 'author': author }),
+          success: function(){
+            location.reload();
+          }
+        });
+      });
+
+      $(".delete-book").click(function(e) {
+        e.preventDefault();
+        var bookId = $(this).data("id");
+        $.ajax({
+          url: "/book/" + bookId,
+          type: "DELETE",
+          success: function() {
+            location.reload();
+          }
+        });
+      });
+
+      $(".edit-book").submit(function(e) {
+        e.preventDefault();
+        var bookId = $(this).data("id");
+        var title = $(this).find("input[name='title']").val();
+        var author = $(this).find("input[name='author']").val();
+        $.ajax({
+          url: "/book/" + bookId,
+          type: "PUT",
+          contentType: "application/json",
+          data: JSON.stringify({ 'title': title, 'author': author }),
+          success: function() {
+            location.reload();
+          }
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Seznam knih</h1>
+  <ul>
+    {% for book in books %}
+      <li>
+        {{ book.title }} - {{ book.author }}
+        <a href="#" class="delete-book" data-id="{{ book.id }}">Smazat</a>
+        <form class="edit-book" data-id="{{ book.id }}">
+          <input type="text" name="title" value="{{ book.title }}">
+          <input type="text" name="author" value="{{ book.author }}">
+          <input type="submit" value="Uložit">
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+  <form class="add-book">
+    <input type="text" name="title" placeholder="Název knihy">
+    <input type="text" name="author" placeholder="Autor">
+    <input type="submit" value="Přidat">
+  </form>
+</body>
+</html>
