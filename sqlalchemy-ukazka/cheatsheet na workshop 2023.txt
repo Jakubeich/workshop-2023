@@ -1,0 +1,43 @@
+- Predstavit co budu ukazovat, takze vysvetlit co bude aplikace delat a s cim budeme pracovat (Flask a SQLAlchemy, Jinja2, AJAX, HTML, Endpoity, API)
+
+- Samotné programování aplikace:
+	1. Nainstalovat potřebné knihovny a packages pres pip
+	2. Inicializovat knihovny a s tím i zakladni inicializace Flasku, SQLAlchemy a Marshmallow, nastavení db
+	3. Vytvoření modelu Book - Knihy
+	4. Inicializace schematu modelu db, na konci backendu udelat i inicializaci nazvu pro __main__ a pro app kdyz se spusti tak se spusti create_all pro db tim se vlastne vytvori db jestli neni vytvorena
+	5. Vytvoreni prvnich endpointu a to zobrazeni hlavni stranky "frontendu" a na tom seznam knih
+	6. Hnedka potom vytvorit enpoint pro vytvareni novych knih tak aby uz mohl ukazat nejakou funkcionalitu, 
+	   tak abych nemusel psat query funckci v endpointu tak queries budu psat jako funkce primo v db model book, takze udelam query get_all_books a add_book funkce 
+	7. Vytvorime v adresari aplikace slozku "templates" a do ni nas jednoduchy "frontend" s nazvem index.html
+	8. Zakladni sktrukturu napsani "doc" a enter, nadpis "Seznam knih", 
+	9. Do body zacneme se seznamem knih ktere se bude asynchronne dynamicky nacitat, nejdrive <ul> odrazkovy seznam s for loopem pro book z books funkce get_all_books
+	10. Do cyklu udelame "polozku seznamu" <li> tag (znacku) a do toho pridame nadpis knihy neboli title z book a autora
+	11. Pod tag <ul> udelame form s classou "add-book" a v tom tri inputy, dva text inputy jeden s nazvem title a druhy autor a ten treti bude submit typ pro tlacitko Pridat
+	12. Tim aby nam fungoval form pro vytvareni knih tak musime vytvorit sumbit funkci pres AJAX a Jquery tak aby se mi po stisknuti spustil endpoint add_book z backendu, to vsechno bude v script elementu
+	13. Tak aby nam fungoval AJAX a Jquery musime naimportovat knihovnu Jquery pres nejakou cdn library
+	14. Vysvetlit co dela ten AJAX, co je Jquery a strukturu te funkce pro add_book
+	15. Ukazat jak to funguje, ze se mi to obnovi samo po pridani knihy a ze na tomto principu funguji stranky ktere vidite vystup hnedka, ze to funguje asynchronne
+	16. Prejdeme do backendu a udelame dalsi dva enpointy pro edit a mazani knih, pro jednotlive endpointy udelat dane query jak pro edit_book tak pro delete_book
+	17. Pak prejdeme do index.html "frontendu" a do <li> tagu udelame a tag s classou s nazvem delete_book a s data id pro id dane knihy takze book.id a text "Smazat"
+	18. Pro edit funkci u dane "knihy" udelame form s class nazvem "edit-book" a s data id pro dany id tak jako pro delete-book
+	19. Ve formu edit-book udelame 3 inputy prvni input bude typ text s name title a s hodnotou title pro danou knihu neboli book, druhy input bude stejny typ ale s nazvem autor a s hodnotou misto title tak bude author 
+	    a ten treti input bude typ sumbit s hodnotou Ulozit protoze budeme chtit potvrdit ten edit
+	20. Pak udelame AJAX asynchronni funkce jak pro edit tak pro delete a tim ukoncime nas program, ukazeme jak to funguje a tim to konci
+
+- Ke konci muzeme rict ze tohle je takova zacatecnicka webová aplikace kde je ale dobre vedet i takove zaklady a zakladni funkce, prace s knihovnama, 
+  s nejakym backend frameworkem a pouziti backendu spolecne s jednoduchym frontendem i kdyz to neni zadny react ani vue.js ale jednoduche HTML
+	
+
+Javascript a JQuery pro manipulaci s knihami v index.html:
+- První částí je načtení jQuery knihovny pomocí <script> tagu. Tato knihovna je načítána z veřejného CDN a je nezbytná pro běh kódu na stránce.
+- Následuje skript, který se spustí, jakmile je dokument načtený ($(document).ready(function(){...})).
+
+1. Funkce $(".add-book").submit(function(e){...}) je událostní obslužná rutina, která se spustí, když je odeslán formulář s třídou add-book. 
+   Tento kód brání standardnímu chování odesílání formuláře (e.preventDefault()), pak bere hodnoty z polí pro název (title) a autora (author) a odesílá je jako JSON pomocí POST 
+
+2. Funkce $(".delete-book").click(function(e) {...}) je událostní obslužná rutina, která se spustí, když je kliknuto na odkaz s třídou delete-book. 
+   Opět zabraňuje standardnímu chování odkazu (e.preventDefault()), pak bere id knihy z atributu data-id odkazu a odesílá DELETE požadavek na server. Pokud je požadavek úspěšný, stránka se obnoví.
+
+3. Funkce $(".edit-book").submit(function(e) {...}) je podobná první funkci, ale pro editaci knihy. 
+   Když je odeslán formulář s třídou edit-book, tato funkce vezme id knihy z atributu data-id formuláře a hodnoty z polí pro název a autora a odesílá je jako JSON pomocí PUT požadavku na server. 
+   Pokud je požadavek úspěšný, stránka se obnoví.
